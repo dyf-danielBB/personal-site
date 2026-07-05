@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="一个部署在群晖上的个人信息网站，用于展示简介、联系方式和常用链接。"
+    />
+    <title>个人信息</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero" aria-labelledby="intro-title">
+        <div class="hero__content">
+          <p class="section-label">个人信息网站</p>
+          <h1 id="intro-title">你好，我是你的名字</h1>
+          <p class="hero__summary">
+            这里是一段简短介绍：你可以写自己的职业方向、正在做的事情、兴趣，或者一句想让访客记住的话。
+          </p>
+          <div class="hero__actions" aria-label="主要操作">
+            <a class="button button--primary" href="mailto:you@example.com">发送邮件</a>
+            <a class="button button--ghost" href="#links">查看链接</a>
+          </div>
+        </div>
+        <div class="profile-panel" aria-label="个人资料摘要">
+          <div class="avatar" aria-hidden="true">你</div>
+          <dl>
+            <div>
+              <dt>所在地</dt>
+              <dd>城市 / 国家</dd>
+            </div>
+            <div>
+              <dt>方向</dt>
+              <dd>产品、技术、写作或其他领域</dd>
+            </div>
+            <div>
+              <dt>状态</dt>
+              <dd>欢迎交流</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="content-grid" aria-label="个人信息详情">
+        <article class="info-section">
+          <h2>关于我</h2>
+          <p>
+            把这里替换成更具体的个人介绍。建议控制在两三句话，让第一次访问的人快速了解你是谁、关注什么、可以怎样联系你。
+          </p>
+        </article>
+
+        <article class="info-section" id="links">
+          <h2>项目与链接</h2>
+          <ul class="link-list">
+            <li><a href="https://example.com">个人主页或博客</a></li>
+            <li><a href="https://github.com/">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
+          </ul>
+        </article>
+
+        <article class="info-section">
+          <h2>联系方式</h2>
+          <p>
+            邮箱：<a href="mailto:you@example.com">you@example.com</a><br />
+            微信 / Telegram / 其他联系方式：按需填写。
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

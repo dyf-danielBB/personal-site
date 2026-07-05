@@ -1,0 +1,19 @@
+services:
+  personal-site-nginx:
+    image: docker.m.daocloud.io/library/nginx:1.27-alpine
+    container_name: personal-site-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./site:/usr/share/nginx/html:ro
+
+  personal-site-cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: personal-site-cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - personal-site-nginx

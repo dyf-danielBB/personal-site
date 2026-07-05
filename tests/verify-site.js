@@ -1,0 +1,54 @@
+const fs = require("node:fs");
+const path = require("node:path");
+
+const root = path.resolve(__dirname, "..");
+
+function read(relativePath) {
+  return fs.readFileSync(path.join(root, relativePath), "utf8");
+}
+
+function assertFile(relativePath) {
+  const fullPath = path.join(root, relativePath);
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`缺少文件：${relativePath}`);
+  }
+  return read(relativePath);
+}
+
+function assertIncludes(content, expected, label) {
+  if (!content.includes(expected)) {
+    throw new Error(`${label} 缺少内容：${expected}`);
+  }
+}
+
+const html = assertFile("site/index.html");
+assertIncludes(html, "<title>个人信息</title>", "首页");
+assertIncludes(html, 'href="./styles.css"', "首页");
+assertIncludes(html, "你好，我是", "首页");
+assertIncludes(html, "联系方式", "首页");
+assertIncludes(html, "项目与链接", "首页");
+
+const css = assertFile("site/styles.css");
+assertIncludes(css, ":root", "样式");
+assertIncludes(css, "@media", "样式");
+assertIncludes(css, "prefers-reduced-motion", "样式");
+
+const compose = assertFile("docker-compose.yml");
+assertIncludes(compose, "personal-site-nginx", "Compose");
+assertIncludes(compose, "nginx:1.27-alpine", "Compose");
+assertIncludes(compose, "./site:/usr/share/nginx/html:ro", "Compose");
+assertIncludes(compose, "personal-site-cloudflared", "Compose");
+assertIncludes(compose, "cloudflare/cloudflared:latest", "Compose");
+assertIncludes(compose, "TUNNEL_TOKEN", "Compose");
+
+const envExample = assertFile(".env.example");
+assertIncludes(envExample, "TUNNEL_TOKEN=", "环境变量示例");
+
+const readme = assertFile("README.md");
+assertIncludes(readme, "群晖个人信息网站", "README");
+assertIncludes(readme, "Container Manager", "README");
+assertIncludes(readme, "Cloudflare Tunnel", "README");
+assertIncludes(readme, "http://群晖局域网IP:8080", "README");
+assertIncludes(readme, "手机蜂窝网络", "README");
+
+console.log("本地结构验收通过：静态站、容器配置和部署说明均已就绪。");
