@@ -7,13 +7,3 @@ services:
       - "8080:80"
     volumes:
       - ./site:/usr/share/nginx/html:ro
-
-  personal-site-cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: personal-site-cloudflared
-    restart: unless-stopped
-    command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-    depends_on:
-      - personal-site-nginx

@@ -21,6 +21,12 @@ function assertIncludes(content, expected, label) {
   }
 }
 
+function assertNotIncludes(content, unexpected, label) {
+  if (content.includes(unexpected)) {
+    throw new Error(`${label} 不应再包含内容：${unexpected}`);
+  }
+}
+
 const html = assertFile("site/index.html");
 assertIncludes(html, "<title>个人信息</title>", "首页");
 assertIncludes(html, 'href="./styles.css"', "首页");
@@ -37,18 +43,19 @@ const compose = assertFile("docker-compose.yml");
 assertIncludes(compose, "personal-site-nginx", "Compose");
 assertIncludes(compose, "nginx:1.27-alpine", "Compose");
 assertIncludes(compose, "./site:/usr/share/nginx/html:ro", "Compose");
-assertIncludes(compose, "personal-site-cloudflared", "Compose");
-assertIncludes(compose, "cloudflare/cloudflared:latest", "Compose");
-assertIncludes(compose, "TUNNEL_TOKEN", "Compose");
-
-const envExample = assertFile(".env.example");
-assertIncludes(envExample, "TUNNEL_TOKEN=", "环境变量示例");
+assertNotIncludes(compose, "personal-site-cloudflared", "Compose");
+assertNotIncludes(compose, "cloudflare/cloudflared", "Compose");
+assertNotIncludes(compose, "TUNNEL_TOKEN", "Compose");
 
 const readme = assertFile("README.md");
 assertIncludes(readme, "群晖个人信息网站", "README");
 assertIncludes(readme, "Container Manager", "README");
-assertIncludes(readme, "Cloudflare Tunnel", "README");
+assertIncludes(readme, "VPS + frp", "README");
+assertIncludes(readme, "me.example.com", "README");
+assertIncludes(readme, "127.0.0.1:18080", "README");
 assertIncludes(readme, "http://群晖局域网IP:8080", "README");
 assertIncludes(readme, "手机蜂窝网络", "README");
+assertNotIncludes(readme, "personal-site-cloudflared", "README");
+assertNotIncludes(readme, "TUNNEL_TOKEN", "README");
 
 console.log("本地结构验收通过：静态站、容器配置和部署说明均已就绪。");

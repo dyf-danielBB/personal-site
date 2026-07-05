@@ -7,7 +7,7 @@
 ```text
 用户浏览器
   ↓
-https://me.dailecheng.xyz
+https://me.example.com
   ↓
 腾讯云 VPS：80 / 443
   ↓
@@ -23,8 +23,8 @@ frp 隧道
 公网用户只访问标准端口：
 
 ```text
-http://me.dailecheng.xyz
-https://me.dailecheng.xyz
+http://me.example.com
+https://me.example.com
 ```
 
 不再暴露这些端口：
@@ -59,10 +59,10 @@ Server: nginx/1.27.5
 Content-Length: 2690
 ```
 
-`me.dailecheng.xyz` 通过 HTTP 已可访问：
+`me.example.com` 通过 HTTP 已可访问：
 
 ```sh
-curl -I http://me.dailecheng.xyz/
+curl -I http://me.example.com/
 ```
 
 返回过：
@@ -114,15 +114,15 @@ photo   A      1.2.3.4
 本次先跑通的是：
 
 ```text
-me.dailecheng.xyz
+me.example.com
 ```
 
-如果之前群晖里有 DNSPod-DDNS 自动更新任务，需要先停用，避免它把 `me.dailecheng.xyz` 或 `www.dailecheng.xyz` 改回家庭公网 IP。
+如果之前群晖里有 DNSPod-DDNS 自动更新任务，需要先停用，避免它把 `me.example.com` 或 `www.example.com` 改回家庭公网 IP。
 
 检查解析：
 
 ```sh
-nslookup me.dailecheng.xyz
+nslookup me.example.com
 ```
 
 结果应该是腾讯云 VPS 公网 IP，而不是家里的公网 IP。
@@ -260,7 +260,7 @@ sudo journalctl -u frps -f
 SSH 登录群晖：
 
 ```sh
-ssh dyf8430@192.168.1.210
+ssh nas-user@群晖局域网IP
 ```
 
 确认 CPU 架构：
@@ -272,8 +272,8 @@ uname -m
 如果输出是 `x86_64`，使用 linux amd64 版本：
 
 ```sh
-mkdir -p /var/services/homes/dyf8430/frp
-cd /var/services/homes/dyf8430/frp
+mkdir -p /var/services/homes/nas-user/frp
+cd /var/services/homes/nas-user/frp
 wget https://gh-proxy.com/https://github.com/fatedier/frp/releases/download/v0.64.0/frp_0.64.0_linux_amd64.tar.gz
 tar -xzf frp_0.64.0_linux_amd64.tar.gz
 cp frp_0.64.0_linux_amd64/frpc .
@@ -291,7 +291,7 @@ wget https://gh.llkk.cc/https://github.com/fatedier/frp/releases/download/v0.64.
 编辑配置：
 
 ```sh
-vi /var/services/homes/dyf8430/frp/frpc.toml
+vi /var/services/homes/nas-user/frp/frpc.toml
 ```
 
 内容：
@@ -320,7 +320,7 @@ localPort = 8080
 表示群晖本机访问个人网站的端口。如果局域网访问地址是：
 
 ```text
-http://192.168.1.210:8080
+http://群晖局域网IP:8080
 ```
 
 这里就填 `8080`。
@@ -328,9 +328,9 @@ http://192.168.1.210:8080
 如果要同时转发群晖应用，继续追加这些 proxy。本次新增的子域名和端口是：
 
 ```text
-photo.dailecheng.xyz      群晖 5080 / 5081
-download.dailecheng.xyz   群晖 8100 / 8101
-audio.dailecheng.xyz      群晖 8800 / 8801
+photo.example.com      群晖 5080 / 5081
+download.example.com   群晖 8100 / 8101
+audio.example.com      群晖 8800 / 8801
 ```
 
 推荐外部 HTTPS 由 VPS Nginx 负责。后端可以先走 HTTP 端口：
@@ -372,7 +372,7 @@ remotePort = 15081
 启动测试：
 
 ```sh
-/var/services/homes/dyf8430/frp/frpc -c /var/services/homes/dyf8430/frp/frpc.toml
+/var/services/homes/nas-user/frp/frpc -c /var/services/homes/nas-user/frp/frpc.toml
 ```
 
 成功日志类似：
@@ -433,15 +433,15 @@ curl -k -I https://127.0.0.1:15081/
 编辑 Nginx 配置：
 
 ```sh
-sudo nano /etc/nginx/sites-available/dailecheng.conf
+sudo nano /etc/nginx/sites-available/example-site.conf
 ```
 
-如果只配置 `me.dailecheng.xyz`：
+如果只配置 `me.example.com`：
 
 ```nginx
 server {
     listen 80;
-    server_name me.dailecheng.xyz;
+    server_name me.example.com;
 
     location / {
         proxy_pass http://127.0.0.1:18080;
@@ -458,7 +458,7 @@ server {
 ```nginx
 server {
     listen 80;
-    server_name www.dailecheng.xyz me.dailecheng.xyz;
+    server_name www.example.com me.example.com;
 
     location / {
         proxy_pass http://127.0.0.1:18080;
@@ -473,7 +473,7 @@ server {
 启用配置：
 
 ```sh
-sudo ln -s /etc/nginx/sites-available/dailecheng.conf /etc/nginx/sites-enabled/dailecheng.conf
+sudo ln -s /etc/nginx/sites-available/example-site.conf /etc/nginx/sites-enabled/example-site.conf
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -481,7 +481,7 @@ sudo systemctl reload nginx
 测试：
 
 ```sh
-curl -I http://me.dailecheng.xyz/
+curl -I http://me.example.com/
 ```
 
 如果返回 `200 OK`，端口隐藏已经跑通。
@@ -499,7 +499,7 @@ Server: nginx/1.24.0 (Ubuntu)
 ```nginx
 server {
     listen 80;
-    server_name photo.dailecheng.xyz;
+    server_name photo.example.com;
 
     location / {
         proxy_pass http://127.0.0.1:15080;
@@ -512,7 +512,7 @@ server {
 
 server {
     listen 80;
-    server_name download.dailecheng.xyz;
+    server_name download.example.com;
 
     location / {
         proxy_pass http://127.0.0.1:18100;
@@ -525,7 +525,7 @@ server {
 
 server {
     listen 80;
-    server_name audio.dailecheng.xyz;
+    server_name audio.example.com;
 
     location / {
         proxy_pass http://127.0.0.1:18800;
@@ -546,18 +546,18 @@ HTTPS 证书建议部署在腾讯云 VPS 上，因为公网浏览器连接的是
 通配符证书包含：
 
 ```text
-dailecheng.xyz
-*.dailecheng.xyz
+example.com
+*.example.com
 ```
 
 可覆盖：
 
 ```text
-me.dailecheng.xyz
-photo.dailecheng.xyz
-download.dailecheng.xyz
-audio.dailecheng.xyz
-www.dailecheng.xyz
+me.example.com
+photo.example.com
+download.example.com
+audio.example.com
+www.example.com
 ```
 
 ### 安装 acme.sh
@@ -570,7 +570,7 @@ wget -O acme.sh.zip https://gh-proxy.com/https://github.com/acmesh-official/acme
 sudo apt install -y unzip
 unzip acme.sh.zip
 cd acme.sh-master
-./acme.sh --install --home ~/.acme.sh --accountemail dyf-843@163.com
+./acme.sh --install --home ~/.acme.sh --accountemail your-email@example.com
 ```
 
 设置默认 CA：
@@ -593,8 +593,8 @@ export Tencent_SecretKey="你的SecretKey"
 ```sh
 ~/.acme.sh/acme.sh --issue \
   --dns dns_tencent \
-  -d dailecheng.xyz \
-  -d "*.dailecheng.xyz" \
+  -d example.com \
+  -d "*.example.com" \
   --keylength 2048 \
   --dnssleep 120 \
   --server letsencrypt
@@ -605,24 +605,24 @@ export Tencent_SecretKey="你的SecretKey"
 普通用户不能直接写 `/etc/nginx`，先安装到用户目录，再复制到 Nginx 目录：
 
 ```sh
-mkdir -p /home/ubuntu/certs/dailecheng.xyz
+mkdir -p /home/ubuntu/certs/example.com
 
-~/.acme.sh/acme.sh --install-cert -d dailecheng.xyz \
-  --key-file /home/ubuntu/certs/dailecheng.xyz/privkey.pem \
-  --fullchain-file /home/ubuntu/certs/dailecheng.xyz/fullchain.pem
+~/.acme.sh/acme.sh --install-cert -d example.com \
+  --key-file /home/ubuntu/certs/example.com/privkey.pem \
+  --fullchain-file /home/ubuntu/certs/example.com/fullchain.pem
 
-sudo mkdir -p /etc/nginx/ssl/dailecheng.xyz
-sudo cp /home/ubuntu/certs/dailecheng.xyz/privkey.pem /etc/nginx/ssl/dailecheng.xyz/privkey.pem
-sudo cp /home/ubuntu/certs/dailecheng.xyz/fullchain.pem /etc/nginx/ssl/dailecheng.xyz/fullchain.pem
-sudo chmod 600 /etc/nginx/ssl/dailecheng.xyz/privkey.pem
-sudo chmod 644 /etc/nginx/ssl/dailecheng.xyz/fullchain.pem
+sudo mkdir -p /etc/nginx/ssl/example.com
+sudo cp /home/ubuntu/certs/example.com/privkey.pem /etc/nginx/ssl/example.com/privkey.pem
+sudo cp /home/ubuntu/certs/example.com/fullchain.pem /etc/nginx/ssl/example.com/fullchain.pem
+sudo chmod 600 /etc/nginx/ssl/example.com/privkey.pem
+sudo chmod 644 /etc/nginx/ssl/example.com/fullchain.pem
 ```
 
 Nginx HTTPS server 都使用这张通配符证书：
 
 ```nginx
-ssl_certificate /etc/nginx/ssl/dailecheng.xyz/fullchain.pem;
-ssl_certificate_key /etc/nginx/ssl/dailecheng.xyz/privkey.pem;
+ssl_certificate /etc/nginx/ssl/example.com/fullchain.pem;
+ssl_certificate_key /etc/nginx/ssl/example.com/privkey.pem;
 ```
 
 ### 群晖应用 HTTPS 配置
@@ -632,10 +632,10 @@ ssl_certificate_key /etc/nginx/ssl/dailecheng.xyz/privkey.pem;
 ```nginx
 server {
     listen 443 ssl;
-    server_name photo.dailecheng.xyz;
+    server_name photo.example.com;
 
-    ssl_certificate /etc/nginx/ssl/dailecheng.xyz/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/dailecheng.xyz/privkey.pem;
+    ssl_certificate /etc/nginx/ssl/example.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/example.com/privkey.pem;
 
     location / {
         proxy_pass https://127.0.0.1:15081;
@@ -663,10 +663,10 @@ server {
 ```nginx
 server {
     listen 443 ssl;
-    server_name download.dailecheng.xyz;
+    server_name download.example.com;
 
-    ssl_certificate /etc/nginx/ssl/dailecheng.xyz/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/dailecheng.xyz/privkey.pem;
+    ssl_certificate /etc/nginx/ssl/example.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/example.com/privkey.pem;
 
     location / {
         proxy_pass http://127.0.0.1:18100;
@@ -688,10 +688,10 @@ server {
 
 server {
     listen 443 ssl;
-    server_name audio.dailecheng.xyz;
+    server_name audio.example.com;
 
-    ssl_certificate /etc/nginx/ssl/dailecheng.xyz/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/dailecheng.xyz/privkey.pem;
+    ssl_certificate /etc/nginx/ssl/example.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/example.com/privkey.pem;
 
     location / {
         proxy_pass http://127.0.0.1:18800;
@@ -722,9 +722,9 @@ sudo systemctl reload nginx
 测试：
 
 ```sh
-curl -I https://photo.dailecheng.xyz/
-curl -I https://download.dailecheng.xyz/
-curl -I https://audio.dailecheng.xyz/
+curl -I https://photo.example.com/
+curl -I https://download.example.com/
+curl -I https://audio.example.com/
 ```
 
 ## 十、确认 acme.sh 自动续期
@@ -740,18 +740,18 @@ crontab -l | grep acme.sh
 手动模拟续期可以使用：
 
 ```sh
-~/.acme.sh/acme.sh --renew -d dailecheng.xyz --server letsencrypt --force
+~/.acme.sh/acme.sh --renew -d example.com --server letsencrypt --force
 ```
 
 如果续期成功，还需要把新证书复制到 Nginx 目录并重载。可以沿用安装证书时的命令：
 
 ```sh
-~/.acme.sh/acme.sh --install-cert -d dailecheng.xyz \
-  --key-file /home/ubuntu/certs/dailecheng.xyz/privkey.pem \
-  --fullchain-file /home/ubuntu/certs/dailecheng.xyz/fullchain.pem
+~/.acme.sh/acme.sh --install-cert -d example.com \
+  --key-file /home/ubuntu/certs/example.com/privkey.pem \
+  --fullchain-file /home/ubuntu/certs/example.com/fullchain.pem
 
-sudo cp /home/ubuntu/certs/dailecheng.xyz/privkey.pem /etc/nginx/ssl/dailecheng.xyz/privkey.pem
-sudo cp /home/ubuntu/certs/dailecheng.xyz/fullchain.pem /etc/nginx/ssl/dailecheng.xyz/fullchain.pem
+sudo cp /home/ubuntu/certs/example.com/privkey.pem /etc/nginx/ssl/example.com/privkey.pem
+sudo cp /home/ubuntu/certs/example.com/fullchain.pem /etc/nginx/ssl/example.com/fullchain.pem
 sudo systemctl reload nginx
 ```
 
@@ -759,7 +759,7 @@ sudo systemctl reload nginx
 
 ```text
 DNSPod API 密钥仍有效
-DNSPod 仍托管 dailecheng.xyz
+DNSPod 仍托管 example.com
 VPS 能访问 Let's Encrypt 和腾讯云 DNSPod API
 ```
 
@@ -776,7 +776,7 @@ Ctrl + C
 后台运行：
 
 ```sh
-nohup /var/services/homes/dyf8430/frp/frpc -c /var/services/homes/dyf8430/frp/frpc.toml >> /var/services/homes/dyf8430/frp/frpc.log 2>&1 &
+nohup /var/services/homes/nas-user/frp/frpc -c /var/services/homes/nas-user/frp/frpc.toml >> /var/services/homes/nas-user/frp/frpc.log 2>&1 &
 ```
 
 检查进程：
@@ -788,7 +788,7 @@ ps aux | grep frpc
 查看日志：
 
 ```sh
-tail -f /var/services/homes/dyf8430/frp/frpc.log
+tail -f /var/services/homes/nas-user/frp/frpc.log
 ```
 
 ## 十二、群晖任务计划开机启动 frpc
@@ -807,7 +807,7 @@ tail -f /var/services/homes/dyf8430/frp/frpc.log
 
 ```text
 任务名称：frpc-start
-用户：dyf8430
+用户：nas-user
 事件：开机
 启用：勾选
 ```
@@ -815,19 +815,19 @@ tail -f /var/services/homes/dyf8430/frp/frpc.log
 脚本：
 
 ```sh
-nohup /var/services/homes/dyf8430/frp/frpc -c /var/services/homes/dyf8430/frp/frpc.toml >> /var/services/homes/dyf8430/frp/frpc.log 2>&1 &
+nohup /var/services/homes/nas-user/frp/frpc -c /var/services/homes/nas-user/frp/frpc.toml >> /var/services/homes/nas-user/frp/frpc.log 2>&1 &
 ```
 
 保存后可以手动运行一次，再检查：
 
 ```sh
 ps aux | grep frpc
-tail -n 50 /var/services/homes/dyf8430/frp/frpc.log
+tail -n 50 /var/services/homes/nas-user/frp/frpc.log
 ```
 
 ## 十三、跑稳后清理旧方案
 
-确认 `https://me.dailecheng.xyz/` 通过手机 4G/5G 稳定访问后，再逐步关闭旧入口。
+确认 `https://me.example.com/` 通过手机 4G/5G 稳定访问后，再逐步关闭旧入口。
 
 建议先停用，不要马上删除：
 
@@ -861,7 +861,7 @@ sudo apt install -y wget tar nginx
 sudo -i
 ```
 
-### 2. `me.dailecheng.xyz` 仍解析到家庭公网 IP
+### 2. `me.example.com` 仍解析到家庭公网 IP
 
 常见原因：
 
@@ -907,7 +907,7 @@ sudo systemctl reload nginx
 并确认 `server_name` 包含当前访问的域名：
 
 ```nginx
-server_name me.dailecheng.xyz;
+server_name me.example.com;
 ```
 
 ### 5. HTTPS 证书续期是否还要手动加任务
@@ -922,12 +922,12 @@ crontab -l | grep acme.sh
 
 如果需要手动续期和安装，参考“确认 acme.sh 自动续期”章节。
 
-### 6. `https://photo.dailecheng.xyz/` 页面一直刷新
+### 6. `https://photo.example.com/` 页面一直刷新
 
 如果 `curl` 没有 301/302 循环：
 
 ```sh
-curl -k -I -L --max-redirs 5 https://photo.dailecheng.xyz/
+curl -k -I -L --max-redirs 5 https://photo.example.com/
 ```
 
 但浏览器页面一直刷新，通常不是 VPS Nginx 跳转问题，而是 Synology Photos 对外部入口识别不一致。
@@ -938,16 +938,16 @@ curl -k -I -L --max-redirs 5 https://photo.dailecheng.xyz/
 1. frpc 增加 photo-https：群晖 5081 -> VPS 15081
 2. VPS Nginx 的 photo 443 配置改为 proxy_pass https://127.0.0.1:15081
 3. proxy_ssl_verify off
-4. 群晖 DSM 登录门户里把 Synology Photos 改成独立域名 photo.dailecheng.xyz
-5. 不再依赖 www.dailecheng.xyz/photo/ 路径别名
-6. 浏览器用无痕窗口或清除 photo.dailecheng.xyz 站点数据后再试
+4. 群晖 DSM 登录门户里把 Synology Photos 改成独立域名 photo.example.com
+5. 不再依赖 www.example.com/photo/ 路径别名
+6. 浏览器用无痕窗口或清除 photo.example.com 站点数据后再试
 ```
 
 关键验证：
 
 ```sh
 curl -k -I https://127.0.0.1:15081/
-curl -k -I https://photo.dailecheng.xyz/
+curl -k -I https://photo.example.com/
 ```
 
 ## 后续扩展
@@ -955,11 +955,11 @@ curl -k -I https://photo.dailecheng.xyz/
 可以按同样方式增加更多服务：
 
 ```text
-www.dailecheng.xyz    -> 个人网站
-me.dailecheng.xyz     -> 个人网站或另一个服务
-photo.dailecheng.xyz  -> 群晖照片服务
-download.dailecheng.xyz -> 群晖 Download
-audio.dailecheng.xyz    -> 群晖 Audio
+www.example.com    -> 个人网站
+me.example.com     -> 个人网站或另一个服务
+photo.example.com  -> 群晖照片服务
+download.example.com -> 群晖 Download
+audio.example.com    -> 群晖 Audio
 ```
 
 每增加一个服务，一般需要：
@@ -974,12 +974,12 @@ audio.dailecheng.xyz    -> 群晖 Audio
 本次 `download` 和 `audio` 可以按下面对应关系复用：
 
 ```text
-download.dailecheng.xyz
+download.example.com
   群晖 localPort：8100
   VPS remotePort：18100
   Nginx proxy_pass：http://127.0.0.1:18100
 
-audio.dailecheng.xyz
+audio.example.com
   群晖 localPort：8800
   VPS remotePort：18800
   Nginx proxy_pass：http://127.0.0.1:18800
