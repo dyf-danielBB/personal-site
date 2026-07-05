@@ -47,15 +47,10 @@ a:hover {
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 32px;
-  align-items: stretch;
   min-height: 520px;
 }
 
 .hero__content,
-.profile-panel,
 .info-section {
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -138,41 +133,6 @@ h2 {
   background: transparent;
 }
 
-.profile-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 28px;
-}
-
-.avatar {
-  display: grid;
-  width: 88px;
-  height: 88px;
-  place-items: center;
-  border-radius: 50%;
-  background: #e7f4ef;
-  color: var(--accent-dark);
-  font-size: 2rem;
-  font-weight: 800;
-}
-
-dl {
-  display: grid;
-  gap: 18px;
-  margin: 32px 0 0;
-}
-
-dt {
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
-dd {
-  margin: 4px 0 0;
-  font-weight: 700;
-}
-
 .content-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -203,7 +163,6 @@ dd {
     padding: 24px 0;
   }
 
-  .hero,
   .content-grid {
     grid-template-columns: 1fr;
   }
@@ -213,7 +172,6 @@ dd {
   }
 
   .hero__content,
-  .profile-panel,
   .info-section {
     box-shadow: 0 16px 44px rgb(15 43 33 / 10%);
   }
