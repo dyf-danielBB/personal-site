@@ -28,11 +28,12 @@ function assertNotIncludes(content, unexpected, label) {
 }
 
 const html = assertFile("site/index.html");
-assertIncludes(html, "<title>个人信息</title>", "首页");
+assertIncludes(html, "<title>光影集 | 个人照片墙</title>", "首页");
 assertIncludes(html, 'href="./styles.css"', "首页");
-assertIncludes(html, "你好，我是", "首页");
-assertIncludes(html, "联系方式", "首页");
-assertIncludes(html, "项目与链接", "首页");
+assertIncludes(html, "光影集", "首页");
+assertIncludes(html, "Photo Wall", "首页");
+assertIncludes(html, "照片墙", "首页");
+assertIncludes(html, "精彩瞬间", "首页");
 
 const css = assertFile("site/styles.css");
 assertIncludes(css, ":root", "样式");

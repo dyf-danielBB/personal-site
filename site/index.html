@@ -5,52 +5,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="一个部署在群晖上的个人信息网站，用于展示简介、联系方式和常用链接。"
+      content="个人精彩瞬间与日常照片墙，记录生活、旅行与每一个值得被记住的时刻。"
     />
-    <title>个人信息</title>
+    <title>光影集 | 个人照片墙</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <header class="site-header">
+      <div class="page-shell">
+        <p class="section-label">Photo Wall</p>
+        <h1>光影集</h1>
+        <p class="hero__summary">
+          记录精彩瞬间与日常片段。每一张照片都是一段时间的切片，拼凑成属于我的生活画卷。
+        </p>
+      </div>
+    </header>
+
     <main class="page-shell">
-      <section class="hero" aria-labelledby="intro-title">
-        <div class="hero__content">
-          <p class="section-label">个人信息网站</p>
-          <h1 id="intro-title">你好，我是你的名字</h1>
-          <p class="hero__summary">
-            这里是一段简短介绍：你可以写自己的职业方向、正在做的事情、兴趣，或者一句想让访客记住的话。
-          </p>
-          <div class="hero__actions" aria-label="主要操作">
-            <a class="button button--primary" href="mailto:yongfa.dai@gmail.com">发送邮件</a>
-            <a class="button button--ghost" href="#links">查看链接</a>
-          </div>
-        </div>
-      </section>
+      <nav class="filter-bar" aria-label="照片分类筛选">
+        <button class="filter-button is-active" data-filter="all" type="button">
+          全部
+        </button>
+        <button class="filter-button" data-filter="highlight" type="button">
+          精彩瞬间
+        </button>
+        <button class="filter-button" data-filter="daily" type="button">
+          日常生活
+        </button>
+        <button class="filter-button" data-filter="travel" type="button">
+          旅行足迹
+        </button>
+      </nav>
 
-      <section class="content-grid" aria-label="个人信息详情">
-        <article class="info-section">
-          <h2>关于我</h2>
-          <p>
-            把这里替换成更具体的个人介绍。建议控制在两三句话，让第一次访问的人快速了解你是谁、关注什么、可以怎样联系你。
-          </p>
+      <section class="photo-wall" aria-label="照片墙">
+        <article class="photo-card" data-category="travel">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-1.jpg"
+              alt="山湖清晨"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">山湖清晨</span>
+              <span class="photo-card__meta">2024.10 · 阿尔卑斯</span>
+            </figcaption>
+          </figure>
         </article>
 
-        <article class="info-section" id="links">
-          <h2>项目与链接</h2>
-          <ul class="link-list">
-            <li><a href="https://example.com">个人主页或博客</a></li>
-            <li><a href="https://github.com/">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-          </ul>
+        <article class="photo-card" data-category="daily">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-2.jpg"
+              alt="冬日雪径"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">冬日雪径</span>
+              <span class="photo-card__meta">2024.02 · 公园</span>
+            </figcaption>
+          </figure>
         </article>
 
-        <article class="info-section">
-          <h2>联系方式</h2>
-          <p>
-            邮箱：<a href="mailto:yongfa.dai@gmail.com">yongfa.dai@gmail.com</a><br />
-            微信 / Telegram / 其他联系方式：按需填写。
-          </p>
+        <article class="photo-card" data-category="travel">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-3.jpg"
+              alt="京都街头"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">京都街头</span>
+              <span class="photo-card__meta">2024.08 · 京都</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="highlight">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-4.jpg"
+              alt="星河之下"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">星河之下</span>
+              <span class="photo-card__meta">2024.07 · 青海</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="daily">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-5.jpg"
+              alt="湖畔独行"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">湖畔独行</span>
+              <span class="photo-card__meta">2024.06 · 湖边</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="travel">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-6.jpg"
+              alt="城市暮色"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">城市暮色</span>
+              <span class="photo-card__meta">2024.05 · 上海</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="daily">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-7.jpg"
+              alt="迷雾林道"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">迷雾林道</span>
+              <span class="photo-card__meta">2024.04 · 郊野</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="highlight">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-8.jpg"
+              alt="云海之上"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">云海之上</span>
+              <span class="photo-card__meta">2024.03 · 飞行途中</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="daily">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-9.jpg"
+              alt="海边凝思"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">海边凝思</span>
+              <span class="photo-card__meta">2024.01 · 青岛</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="travel">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-10.jpg"
+              alt="棕熊先生"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">棕熊先生</span>
+              <span class="photo-card__meta">2023.12 · 动物园</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="highlight">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-11.jpg"
+              alt="晴空飞鸟"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">晴空飞鸟</span>
+              <span class="photo-card__meta">2023.10 · 内蒙</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="photo-card" data-category="travel">
+          <figure class="photo-card__figure">
+            <img
+              class="photo-card__image"
+              src="./images/photo-12.jpg"
+              alt="云海松林"
+              loading="lazy"
+            />
+            <figcaption class="photo-card__caption">
+              <span class="photo-card__title">云海松林</span>
+              <span class="photo-card__meta">2023.09 · 川西</span>
+            </figcaption>
+          </figure>
         </article>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="page-shell">
+        <p>用照片记录生活，让每一刻都有迹可循。</p>
+      </div>
+    </footer>
+
+    <script>
+      const filterButtons = document.querySelectorAll('.filter-button');
+      const photoCards = document.querySelectorAll('.photo-card');
+
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const filter = button.dataset.filter;
+
+          filterButtons.forEach((btn) => btn.classList.remove('is-active'));
+          button.classList.add('is-active');
+
+          photoCards.forEach((card) => {
+            const visible = filter === 'all' || card.dataset.category === filter;
+            card.classList.toggle('is-hidden', !visible);
+          });
+        });
+      });
+
+      photoCards.forEach((card) => {
+        const figure = card.querySelector('.photo-card__figure');
+        const image = card.querySelector('.photo-card__image');
+
+        card.addEventListener('mousemove', (event) => {
+          const rect = figure.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+
+          figure.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+          image.style.transform = `translateZ(30px) scale(1.05)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          figure.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+          image.style.transform = 'translateZ(0) scale(1)';
+        });
+      });
+    </script>
   </body>
 </html>
